@@ -1,0 +1,141 @@
+<!--
+
+        ToDo App
+        github.com/alieskici
+        
+        My goal with this version is; simple using, high-mobility, a unique file to use by any browser.
+        Next versions will be in modular structure and much more improved.
+
+-->
+
+<html>
+    <head>
+        <title>ToDo</title>
+        <meta charset="UTF-8">
+        <style>
+            body, table, tr, td, form, input, button {
+                font-size: 24px;
+                font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            }
+            table, tr, td {
+                border-width:0px;
+                border-spacing: 0px;
+                align-items: center;
+                width:600px;
+                border-radius: 8px;
+                padding: 2px;
+            }
+            input, button {
+                width:100%;
+                border-radius: 8px;
+            }
+        </style>
+        <script>
+            var count = -1;
+
+            function getCurrentTime(){
+                let dt = new Date();
+                let h = dt.getHours();
+                let m = dt.getMinutes();
+                document.getElementById("time").value = h + ":" + m;                
+            }
+
+            function AddNew(){
+                let f = document.forms['formAddNew'];
+                
+                let time = f.time.value;
+                let task = f.task.value;
+                
+                if (task != "" && task != null) {
+                    let t = document.createElement("table");
+                    document.body.appendChild(t);
+                    count++;
+                    t.id = "job" + count;
+                    t.align = "center";
+                    t.style = "border-width:0px; border-spacing:8px; background-color: red";
+                    let tr = t.insertRow(-1);
+                    let tdc = tr.insertCell(0); //checkmark cell
+                        tdc.innerHTML = "&nbsp;";
+                        tdc.style = "width:20px";
+                    let td0 = tr.insertCell(1);
+                        td0.innerHTML =  time;
+                        td0.style = "width:80px; background-color: yellow";
+                    let td1 = tr.insertCell(2);
+                        td1.style = "width:400px; background-color: white";
+                        td1.innerHTML = task;
+                    let td2 = tr.insertCell(3);
+                        td2.style = "width:90px";
+                        td2.innerHTML = "<input type='button' id='done"+count+"' value='&#10004;' onClick = 'Done("+ count +")'>";
+                    let td3 = tr.insertCell(4);
+                        td3.style = "width:90px";
+                        td3.innerHTML = "<input type='button' id='dele' value='X' onClick = 'Delete("+ count +")'>";
+                    
+                    f.task.value = "";
+                } 
+
+                getCurrentTime();
+                f.task.focus();
+
+                return false;
+            }
+
+            function Delete(a){
+                document.getElementById("job"+a).remove();
+            }
+
+            function Done(a){
+                document.getElementById("done"+a).style.visibility="hidden";
+
+                let t = document.getElementById("job"+a);
+                t.style.backgroundColor = "#8888FF";
+                t.rows[0].cells[0].style.backgroundColor = "white";
+                t.rows[0].cells[0].innerHTML = "&#10004;";
+            }
+
+            function DeleteAll(){
+                location.reload();
+            }
+
+            function DoneAll(){
+                let b = document.getElementsByTagName("input");
+                for (let i = 0; i < b.length; i++) {
+                    if (b[i].id.indexOf("done") > -1) {
+                        b[i].style.visibility = "hidden";
+                    }
+                }
+
+                let t = document.getElementsByTagName("table");
+                for (let i = 0; i < t.length; i++) {
+                    if (t[i].id.indexOf("job") == 0) {
+                        t[i].style.backgroundColor = "#8888FF";
+                        t[i].rows[0].cells[0].style.backgroundColor = "white";
+                        t[i].rows[0].cells[0].innerHTML = "&#10004;";
+                    }
+                }
+            }
+
+            window.onload = getCurrentTime;
+        </script>
+    </head>
+    <body>
+        <form name = "formAddNew" id = "formAddNew" method = "POST" onsubmit = "return AddNew()">
+            <table align = "center">
+                <tr>
+                    <td><input type="time" id="time"></td>
+                    <td style="width:100%"><input type="text" id="task" size="20" placeholder="Type your task" style="width:100%"></td>
+                    <td><input type="submit" id="send" style="width:100%" value="Add"></td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="center">
+                        <table style="width:50%">
+                            <tr>
+                                <td style="width:50%"><input type="button" value="Done All" onclick="DoneAll()"></td>
+                                <td style="width:50%"><input type="button" value="Delete All" onclick="DeleteAll()"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>
