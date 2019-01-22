@@ -2,9 +2,6 @@
 
         ToDo App
         github.com/alieskici
-        
-        My goal with this version is; simple using, high-mobility, a unique file to use by any browser.
-        Next versions will be in modular structure and much more improved.
 
 -->
 
@@ -36,15 +33,17 @@
             function getCurrentTime(){
                 let dt = new Date();
                 let h = dt.getHours();
+                    if (h.length == 1) {h = "0" + h;}
                 let m = dt.getMinutes();
-                document.getElementById("time").value = h + ":" + m;                
+                    if (m.length == 1) {m = "0" + m;}
+                return h + ":" + m;
             }
 
             function AddNew(){
                 let f = document.forms['formAddNew'];
                 
-                let time = f.time.value;
-                let task = f.task.value;
+                let time = f.addTime.value;
+                let task = f.addTask.value;
                 
                 if (task != "" && task != null) {
                     let t = document.createElement("table");
@@ -54,27 +53,25 @@
                     t.align = "center";
                     t.style = "border-width:0px; border-spacing:8px; background-color: red";
                     let tr = t.insertRow(-1);
-                    let tdc = tr.insertCell(0); //checkmark cell
-                        tdc.innerHTML = "&nbsp;";
-                        tdc.style = "width:20px";
-                    let td0 = tr.insertCell(1);
+                    let td0 = tr.insertCell(0);
                         td0.innerHTML =  time;
                         td0.style = "width:80px; background-color: yellow";
-                    let td1 = tr.insertCell(2);
-                        td1.style = "width:400px; background-color: white";
-                        td1.innerHTML = task;
-                    let td2 = tr.insertCell(3);
+                    let td1 = tr.insertCell(1);
+                        td1.style = "width:600px; background-color: white";
+                        td1.innerHTML = "<input type='text' id='task"+count+"' size='20' style='width:100%; border-width:0;' value='"+task+"'>";
+                    let td2 = tr.insertCell(2);
                         td2.style = "width:90px";
                         td2.innerHTML = "<input type='button' id='done"+count+"' value='&#10004;' onClick = 'Done("+ count +")'>";
-                    let td3 = tr.insertCell(4);
+                    let td3 = tr.insertCell(3);
                         td3.style = "width:90px";
                         td3.innerHTML = "<input type='button' id='dele' value='X' onClick = 'Delete("+ count +")'>";
                     
-                    f.task.value = "";
+                    f.addTask.value = "";
                 } 
 
-                getCurrentTime();
-                f.task.focus();
+                //f.time.value = getCurrentTime();
+                document.getElementById("addTime").value = getCurrentTime();
+                f.addTask.focus();
 
                 return false;
             }
@@ -85,11 +82,13 @@
 
             function Done(a){
                 document.getElementById("done"+a).style.visibility="hidden";
+                document.getElementById("task"+a).setAttribute("readonly", true);
 
                 let t = document.getElementById("job"+a);
                 t.style.backgroundColor = "#8888FF";
                 t.rows[0].cells[0].style.backgroundColor = "white";
-                t.rows[0].cells[0].innerHTML = "&#10004;";
+                t.rows[0].cells[2].style.backgroundColor = "white";
+                t.rows[0].cells[2].innerHTML = "<center>"+getCurrentTime()+"</center>";
             }
 
             function DeleteAll(){
@@ -98,31 +97,39 @@
 
             function DoneAll(){
                 let b = document.getElementsByTagName("input");
-                for (let i = 0; i < b.length; i++) {
-                    if (b[i].id.indexOf("done") > -1) {
-                        b[i].style.visibility = "hidden";
+                if (b.length > 0) {
+                    for (let i = 0; i < b.length; i++) {
+                        //buttons 'done'
+                        if (b[i].id.indexOf("done") == 0) {
+                            b[i].style.visibility = "hidden";
+                        }
+                        //textboxes 'task'
+                        if (b[i].id.indexOf("task") == 0) {
+                            b[i].setAttribute("readonly", true);
+                        }
                     }
                 }
-
+                
                 let t = document.getElementsByTagName("table");
-                for (let i = 0; i < t.length; i++) {
-                    if (t[i].id.indexOf("job") == 0) {
-                        t[i].style.backgroundColor = "#8888FF";
-                        t[i].rows[0].cells[0].style.backgroundColor = "white";
-                        t[i].rows[0].cells[0].innerHTML = "&#10004;";
+                if (t.length > 0) {
+                    for (let i = 0; i < t.length; i++) {
+                        if (t[i].id.indexOf("job") == 0 && t[i].style.backgroundColor != "#8888FF") {
+                            t[i].style.backgroundColor = "#8888FF";
+                            t[i].rows[0].cells[0].style.backgroundColor = "white";
+                            t[i].rows[0].cells[2].style.backgroundColor = "white";
+                            t[i].rows[0].cells[2].innerHTML = "<center>"+getCurrentTime()+"</center>";
+                        }
                     }
                 }
             }
-
-            window.onload = getCurrentTime;
         </script>
     </head>
-    <body>
+    <body onload = "document.getElementById('addTime').value = getCurrentTime()">
         <form name = "formAddNew" id = "formAddNew" method = "POST" onsubmit = "return AddNew()">
             <table align = "center">
                 <tr>
-                    <td><input type="time" id="time"></td>
-                    <td style="width:100%"><input type="text" id="task" size="20" placeholder="Type your task" style="width:100%"></td>
+                    <td><input type="time" id="addTime"></td>
+                    <td style="width:100%"><input type="text" id="addTask" size="20" placeholder="Type your task" style="width:100%" onload="this.focus()"></td>
                     <td><input type="submit" id="send" style="width:100%" value="Add"></td>
                 </tr>
                 <tr>
