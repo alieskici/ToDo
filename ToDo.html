@@ -32,9 +32,9 @@
 
             function getCurrentTime(){
                 let dt = new Date();
-                let h = dt.getHours();
+                let h = dt.getHours().toString();
                     if (h.length == 1) {h = "0" + h;}
-                let m = dt.getMinutes();
+                let m = dt.getMinutes().toString();
                     if (m.length == 1) {m = "0" + m;}
                 return h + ":" + m;
             }
@@ -58,7 +58,7 @@
                         td0.style = "width:80px; background-color: yellow";
                     let td1 = tr.insertCell(1);
                         td1.style = "width:600px; background-color: white";
-                        td1.innerHTML = "<input type='text' id='task"+count+"' size='20' style='width:100%; border-width:0;' value='"+task+"'>";
+                        td1.innerHTML = "<input type='text' id='task"+count+"' size='20' style='width:100%; border-width:0;' value = '"+task+"'>";
                     let td2 = tr.insertCell(2);
                         td2.style = "width:90px";
                         td2.innerHTML = "<input type='button' id='done"+count+"' value='&#10004;' onClick = 'Done("+ count +")'>";
@@ -81,7 +81,7 @@
             }
 
             function Done(a){
-                document.getElementById("done"+a).style.visibility="hidden";
+                document.getElementById("done"+a).style.visibility = "hidden";
                 document.getElementById("task"+a).setAttribute("readonly", true);
 
                 let t = document.getElementById("job"+a);
@@ -113,7 +113,7 @@
                 let t = document.getElementsByTagName("table");
                 if (t.length > 0) {
                     for (let i = 0; i < t.length; i++) {
-                        if (t[i].id.indexOf("job") == 0 && t[i].style.backgroundColor != "#8888FF") {
+                        if (t[i].id.indexOf("job") == 0 && t[i].style.backgroundColor == "red") {
                             t[i].style.backgroundColor = "#8888FF";
                             t[i].rows[0].cells[0].style.backgroundColor = "white";
                             t[i].rows[0].cells[2].style.backgroundColor = "white";
@@ -129,15 +129,15 @@
             <table align = "center">
                 <tr>
                     <td><input type="time" id="addTime"></td>
-                    <td style="width:100%"><input type="text" id="addTask" size="20" placeholder="Type your task" style="width:100%" onload="this.focus()"></td>
+                    <td style="width:100%"><input type="text" id="addTask" size="20" placeholder="Type your task" style="width:100%" onload = "this.focus()"></td>
                     <td><input type="submit" id="send" style="width:100%" value="Add"></td>
                 </tr>
                 <tr>
                     <td colspan="3" align="center">
                         <table style="width:50%">
                             <tr>
-                                <td style="width:50%"><input type="button" value="Done All" onclick="DoneAll()"></td>
-                                <td style="width:50%"><input type="button" value="Delete All" onclick="DeleteAll()"></td>
+                                <td style="width:50%"><input type="button" value="Done All" onclick = "DoneAll()"></td>
+                                <td style="width:50%"><input type="button" value="Delete All" onclick = "DeleteAll()"></td>
                             </tr>
                         </table>
                     </td>
