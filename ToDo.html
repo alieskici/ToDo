@@ -13,6 +13,7 @@
             body, table, tr, td, form, input, button {
                 font-size: 24px;
                 font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                background-color:#888888;
             }
             table, tr, td {
                 border-width:0px;
@@ -25,10 +26,27 @@
             input, button {
                 width:100%;
                 border-radius: 8px;
+                background-color: white;
+            }
+
+            .add1 {
+                background-color:black;
+                color: white;
+            }
+            .add2{
+                background-color:black;
+                color: white;
+                font-size: 18px;
+            }
+            .result{
+                color: white;
+                font-size: 18px;
             }
         </style>
         <script>
             var count = -1;
+            var countTask = 0;
+            var countWaiting = 0;
 
             function getCurrentTime(){
                 let dt = new Date();
@@ -53,6 +71,7 @@
                     t.align = "center";
                     t.style = "border-width:0px; border-spacing:8px; background-color: red";
                     let tr = t.insertRow(-1);
+                    tr.style = "background-color: red";
                     let td0 = tr.insertCell(0);
                         td0.innerHTML =  time;
                         td0.style = "width:80px; background-color: yellow";
@@ -67,6 +86,8 @@
                         td3.innerHTML = "<input type='button' id='dele' value='X' onClick = 'Delete("+ count +")'>";
                     
                     f.addTask.value = "";
+
+                    CountTask();
                 } 
 
                 //f.time.value = getCurrentTime();
@@ -78,6 +99,7 @@
 
             function Delete(a){
                 document.getElementById("job"+a).remove();
+                CountTask();
             }
 
             function Done(a){
@@ -86,9 +108,12 @@
 
                 let t = document.getElementById("job"+a);
                 t.style.backgroundColor = "#8888FF";
+                t.rows[0].style.backgroundColor = "#8888FF";
                 t.rows[0].cells[0].style.backgroundColor = "white";
                 t.rows[0].cells[2].style.backgroundColor = "white";
                 t.rows[0].cells[2].innerHTML = "<center>"+getCurrentTime()+"</center>";
+
+                CountTask();
             }
 
             function DeleteAll(){
@@ -115,11 +140,46 @@
                     for (let i = 0; i < t.length; i++) {
                         if (t[i].id.indexOf("job") == 0 && t[i].style.backgroundColor == "red") {
                             t[i].style.backgroundColor = "#8888FF";
+                            t[i].rows[0].style.backgroundColor = "#8888FF";
                             t[i].rows[0].cells[0].style.backgroundColor = "white";
                             t[i].rows[0].cells[2].style.backgroundColor = "white";
                             t[i].rows[0].cells[2].innerHTML = "<center>"+getCurrentTime()+"</center>";
                         }
                     }
+                }
+
+                CountTask();
+            }
+
+            function CountTask(){
+                countTask = 0;
+                countWaiting = 0;
+                let t = document.getElementsByTagName("table");
+                if (t.length > 0) {
+                    for (let i = 0; i < t.length; i++) {
+                        if (t[i].id.indexOf("job") == 0) {
+                            countTask++;
+
+                            if (t[i].style.backgroundColor != "red") {
+                                countWaiting++;
+                            }
+                        }
+                    }
+
+                    if (countTask - countWaiting > 0) {
+                        document.getElementById("result").innerHTML = countWaiting.toString() + " done, " + (countTask - countWaiting).toString() + " waiting, " + countTask.toString() + " total.";
+                    }
+                    else
+                    {
+                        document.getElementById("result").innerHTML = "All (" + countTask.toString() + ") is done.";
+                    }
+                }
+            }
+
+            window.onbeforeunload = function () {
+                CountTask();
+                if (countTask - countWaiting > 0) {
+                    return "There are still waiting tasks. Are you sure that you want to leave this page?";
                 }
             }
         </script>
@@ -128,16 +188,19 @@
         <form name = "formAddNew" id = "formAddNew" method = "POST" onsubmit = "return AddNew()">
             <table align = "center">
                 <tr>
-                    <td><input type="time" id="addTime"></td>
-                    <td style="width:100%"><input type="text" id="addTask" size="20" placeholder="Type your task" style="width:100%" onload = "this.focus()"></td>
-                    <td><input type="submit" id="send" style="width:100%" value="Add"></td>
+                    <td><input type="time" id="addTime" class = "add1"></td>
+                    <td style="width:100%"><input type="text" class = "add1" id="addTask" size="20" placeholder="Type your task" onload = "this.focus()"></td>
+                    <td><input type="submit" id="send" class = "add1" value="  +  "></td>
                 </tr>
                 <tr>
                     <td colspan="3" align="center">
                         <table style="width:50%">
                             <tr>
-                                <td style="width:50%"><input type="button" value="Done All" onclick = "DoneAll()"></td>
-                                <td style="width:50%"><input type="button" value="Delete All" onclick = "DeleteAll()"></td>
+                                <td style="width:50%"><input type="button" class = "add2" value="&#10004; All" onclick = "DoneAll()"></td>
+                                <td style="width:50%"><input type="button" class = "add2" value="X All" onclick = "DeleteAll()"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="center"><label id = "result" class = "result"></label></td>
                             </tr>
                         </table>
                     </td>
