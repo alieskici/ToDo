@@ -60,7 +60,7 @@
 
             function AddNew(){
                 let f = document.forms['formAddNew'];
-                
+                f.addTime.value = getCurrentTime();
                 let time = f.addTime.value;
                 let task = f.addTask.value;
                 
