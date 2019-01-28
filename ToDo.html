@@ -15,6 +15,9 @@
                 font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
                 font-weight: bold;
                 background-color:#888888;
+
+                transition-timing-function: linear;
+                transition: width 2s;
             }
             table, tr, td {
                 border-width:0px;
@@ -23,6 +26,9 @@
                 width:600px;
                 border-radius: 8px;
                 padding: 2px;
+
+                transition-timing-function: linear;
+                transition: width 2s;
             }
             input, button {
                 width:100%;
@@ -42,6 +48,11 @@
             .result{
                 color: white;
                 font-size: 18px;
+            }
+
+            a{
+                text-decoration: none;
+                width: fit-content;
             }
         </style>
         <script>
@@ -176,7 +187,42 @@
                     {
                         document.getElementById("result").innerHTML = "All (" + countTask.toString() + ") is done.";
                     }
+
+                    if (countTask == 0) {
+                        ShowformAddNew();
+                        document.getElementById("hide").style.display = "none";
+                        document.getElementById("show").style.display = "none";
+                        DisableButtons();
+                    }
+                    if (countTask > 0) {
+                        document.getElementById("hide").style.display = "inline";
+                        document.getElementById("show").style.display = "none";
+                        EnableButtons();
+                    }
                 }
+            }
+
+            function HideformAddNew(){
+                document.getElementById("formAddNew").style.display = "none";
+
+                document.getElementById("hide").style.display = "none";
+                document.getElementById("show").style.display = "inline";
+            }
+
+            function ShowformAddNew(){
+                document.getElementById("formAddNew").style.display = "block";
+
+                document.getElementById("hide").style.display = "inline";
+                document.getElementById("show").style.display = "none";
+            }
+
+            function DisableButtons(){
+                document.getElementById("formDoneAll").disabled = true;
+                document.getElementById("formDeleteAll").disabled = true;
+            }
+            function EnableButtons(){
+                document.getElementById("formDoneAll").disabled = false;
+                document.getElementById("formDeleteAll").disabled = false;
             }
 
             window.onbeforeunload = function () {
@@ -187,7 +233,9 @@
             }
 
             window.onload = function(){
-                document.getElementById('addTime').value = getCurrentTime();
+                DisableButtons();
+                
+                document.getElementById("addTime").value = getCurrentTime();
                 document.getElementById("addTask").focus();
             }
         </script>
@@ -204,8 +252,8 @@
                     <td colspan="3" align="center">
                         <table style="width:50%">
                             <tr>
-                                <td style="width:50%"><input type="button" class = "add2" value="&#10004; All" onclick = "DoneAll()"></td>
-                                <td style="width:50%"><input type="button" class = "add2" value="X All" onclick = "DeleteAll()"></td>
+                                <td style="width:50%"><input type="button" id="formDoneAll" class = "add2" value="&#10004; All" onclick = "DoneAll()"></td>
+                                <td style="width:50%"><input type="button" id="formDeleteAll" class = "add2" value="X All" onclick = "DeleteAll()"></td>
                             </tr>
                             <tr>
                                 <td colspan="2" align="center"><label id = "result" class = "result"></label></td>
@@ -215,5 +263,9 @@
                 </tr>
             </table>
         </form>
+        <center>
+            <div id="hide" style="width:600px; display: none; border-width: 4px"><a href="#" onclick="HideformAddNew()">▲</a></div>
+            <div id="show" style="width:600px; display: none; border-width: 4px"><a href="#" onclick="ShowformAddNew()">▼</a></div>
+        </center>
     </body>
 </html>
