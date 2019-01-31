@@ -16,8 +16,7 @@
                 font-weight: bold;
                 background-color:#888888;
 
-                transition-timing-function: linear;
-                transition: width 2s;
+                transition: all 2s;
             }
             table, tr, td {
                 border-width:0px;
@@ -27,8 +26,7 @@
                 border-radius: 8px;
                 padding: 2px;
 
-                transition-timing-function: linear;
-                transition: width 2s;
+                transition: all 2s;
             }
             input, button {
                 width:100%;
@@ -59,6 +57,11 @@
             var count = -1;
             var countTask = 0;
             var countWaiting = 0;
+
+            //no need to write that function long
+            function g(a){
+                return document.getElementById(a);
+            }
 
             function getCurrentTime(){
                 let dt = new Date();
@@ -108,15 +111,15 @@
             }
 
             function Delete(a){
-                document.getElementById("job"+a).remove();
+                g("job"+a).remove();
                 CountTask();
             }
 
             function Done(a){
-                document.getElementById("done"+a).style.visibility = "hidden";
-                document.getElementById("task"+a).setAttribute("readonly", true);
+                g("done"+a).style.visibility = "hidden";
+                g("task"+a).setAttribute("readonly", true);
 
-                let t = document.getElementById("job"+a);
+                let t = g("job"+a);
                 t.style.backgroundColor = "#8888FF";
                 t.rows[0].style.backgroundColor = "#8888FF";
                 t.rows[0].cells[0].style.backgroundColor = "white";
@@ -162,7 +165,7 @@
 
                 CountTask();
 
-                document.getElementById("addTask").focus();
+                g("addTask").focus();
             }
 
             function CountTask(){
@@ -181,48 +184,48 @@
                     }
 
                     if (countTask - countWaiting > 0) {
-                        document.getElementById("result").innerHTML = countWaiting.toString() + " done, " + (countTask - countWaiting).toString() + " waiting, " + countTask.toString() + " total.";
+                        g("result").innerHTML = countWaiting.toString() + " done, " + (countTask - countWaiting).toString() + " waiting, " + countTask.toString() + " total.";
                     }
                     else
                     {
-                        document.getElementById("result").innerHTML = "All (" + countTask.toString() + ") is done.";
+                        g("result").innerHTML = "All (" + countTask.toString() + ") is done.";
                     }
 
                     if (countTask == 0) {
                         ShowformAddNew();
-                        document.getElementById("hide").style.display = "none";
-                        document.getElementById("show").style.display = "none";
+                        g("hide").style.display = "none";
+                        g("show").style.display = "none";
                         DisableButtons();
                     }
                     if (countTask > 0) {
-                        document.getElementById("hide").style.display = "inline";
-                        document.getElementById("show").style.display = "none";
+                        g("hide").style.display = "inline";
+                        g("show").style.display = "none";
                         EnableButtons();
                     }
                 }
             }
 
             function HideformAddNew(){
-                document.getElementById("formAddNew").style.display = "none";
+                g("formAddNew").style.display = "none";
 
-                document.getElementById("hide").style.display = "none";
-                document.getElementById("show").style.display = "inline";
+                g("hide").style.display = "none";
+                g("show").style.display = "inline";
             }
 
             function ShowformAddNew(){
-                document.getElementById("formAddNew").style.display = "block";
+                g("formAddNew").style.display = "block";
 
-                document.getElementById("hide").style.display = "inline";
-                document.getElementById("show").style.display = "none";
+                g("hide").style.display = "inline";
+                g("show").style.display = "none";
             }
 
             function DisableButtons(){
-                document.getElementById("formDoneAll").disabled = true;
-                document.getElementById("formDeleteAll").disabled = true;
+                g("formDoneAll").disabled = true;
+                g("formDeleteAll").disabled = true;
             }
             function EnableButtons(){
-                document.getElementById("formDoneAll").disabled = false;
-                document.getElementById("formDeleteAll").disabled = false;
+                g("formDoneAll").disabled = false;
+                g("formDeleteAll").disabled = false;
             }
 
             window.onbeforeunload = function () {
@@ -234,9 +237,9 @@
 
             window.onload = function(){
                 DisableButtons();
-                
-                document.getElementById("addTime").value = getCurrentTime();
-                document.getElementById("addTask").focus();
+
+                g("addTime").value = getCurrentTime();
+                g("addTask").focus();
             }
         </script>
     </head>
@@ -264,8 +267,8 @@
             </table>
         </form>
         <center>
-            <div id="hide" style="width:600px; display: none; border-width: 4px"><a href="#" onclick="HideformAddNew()">▲</a></div>
-            <div id="show" style="width:600px; display: none; border-width: 4px"><a href="#" onclick="ShowformAddNew()">▼</a></div>
+            <div id="hide" style="display: none"><input type="button" value="▲" onclick="HideformAddNew()" style="width:100px; height:16px; font-size: 8px"></div>
+            <div id="show" style="display: none"><input type="button" value="▼" onclick="ShowformAddNew()" style="width:100px; height:16px; font-size: 8px"></div>
         </center>
     </body>
 </html>
